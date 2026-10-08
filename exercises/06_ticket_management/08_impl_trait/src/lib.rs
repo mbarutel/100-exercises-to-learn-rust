@@ -21,6 +21,12 @@ pub enum Status {
     Done,
 }
 
+pub struct Tick {
+    pub title: TicketTitle,
+    pub description: TicketDescription,
+    pub status: Status,
+}
+
 impl TicketStore {
     pub fn new() -> Self {
         Self {
@@ -30,6 +36,17 @@ impl TicketStore {
 
     pub fn add_ticket(&mut self, ticket: Ticket) {
         self.tickets.push(ticket);
+    }
+
+    pub fn in_progress(&self) -> impl Iterator<Item = &Ticket> {
+        self.tickets
+            .iter()
+            // .map(|t| Tick {
+            //     title: t.title,
+            //     description: t.description,
+            //     status: t.status,
+            // })
+            .filter(|t| t.status == Status::InProgress)
     }
 }
 
