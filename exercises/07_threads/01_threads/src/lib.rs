@@ -15,7 +15,14 @@
 use std::thread;
 
 pub fn sum(v: Vec<i32>) -> i32 {
-    todo!()
+    let handle = thread::spawn(move || {
+        return v.iter().sum();
+    });
+
+    match handle.join() {
+        Ok(ret_val) => ret_val,
+        Err(_) => panic!("Something went wrong."),
+    }
 }
 
 #[cfg(test)]
