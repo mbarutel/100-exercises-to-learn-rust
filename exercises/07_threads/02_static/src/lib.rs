@@ -8,16 +8,20 @@ pub fn sum(slice: &'static [i32]) -> i32 {
     // let left_half = &slice[0..split_point];
     // let right_half = &slice[split_point..];
 
-    let _left_handle = thread::spawn(|| slice[..split_point].iter().sum::<i32>());
+    let left_handle = thread::spawn(move || slice[..split_point].iter().sum::<i32>());
+    let right_handle = thread::spawn(move || slice[split_point..].iter().sum::<i32>());
 
-    todo!()
+    let mut res = match left_handle.join() {
+        Ok(ret_value) => ret_value,
+        Err(_) => panic!("Something bad happened"),
+    };
 
-    // let mut res = match left_handle.join() {
-    //     Ok(ret_value) => ret_value,
-    //     Err(_) => panic!("Something bad happened")
-    // }
+    res = match right_handle.join() {
+        Ok(ret_value) => ret_value + res,
+        Err(_) => panic!("Something bad happened"),
+    };
 
-    // res
+    res
 }
 
 #[cfg(test)]
